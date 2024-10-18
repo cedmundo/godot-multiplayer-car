@@ -1,6 +1,77 @@
-[gd_scene load_steps=2 format=3 uid="uid://efifidwgdqka"]
+[gd_scene load_steps=4 format=3 uid="uid://efifidwgdqka"]
 
 [ext_resource type="Script" path="res://main.gd" id="1_4w4b5"]
+[ext_resource type="Shader" path="res://assets/checkboard.gdshader" id="2_vjsvd"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_rn58k"]
+render_priority = 0
+shader = ExtResource("2_vjsvd")
+shader_parameter/albedo = Color(0.140447, 0.140447, 0.140447, 1)
+shader_parameter/detail_texture_size = Vector2(256, 256)
+shader_parameter/specular = null
+shader_parameter/metallic = 0.0
+shader_parameter/roughness = 0.5
 
 [node name="Main" type="Node3D"]
 script = ExtResource("1_4w4b5")
+
+[node name="GUI" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="MarginContainer" type="MarginContainer" parent="GUI"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 20
+theme_override_constants/margin_top = 20
+theme_override_constants/margin_right = 20
+theme_override_constants/margin_bottom = 20
+
+[node name="VBoxContainer" type="VBoxContainer" parent="GUI/MarginContainer"]
+custom_minimum_size = Vector2(200, 0)
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 8
+
+[node name="ChangeColorButton" type="Button" parent="GUI/MarginContainer/VBoxContainer"]
+layout_mode = 2
+text = "Change color"
+
+[node name="ReadyButton" type="Button" parent="GUI/MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 8
+toggle_mode = true
+text = "Ready"
+
+[node name="Players" type="Node3D" parent="."]
+
+[node name="MultiplayerSpawner" type="MultiplayerSpawner" parent="."]
+_spawnable_scenes = PackedStringArray("res://player/player.tscn")
+spawn_path = NodePath("../Players")
+
+[node name="Camera3D" type="Camera3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0.947165, 0.320745, 0, -0.320745, 0.947165, -3.8147e-06, 1.53502, 3.57727)
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(0.831867, -0.343041, 0.436257, 0, 0.786084, 0.61812, -0.554975, -0.514194, 0.653917, 0, 4.43328, 0)
+
+[node name="Map" type="CSGCombiner3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.6, 0)
+use_collision = true
+
+[node name="CSGBox3D" type="CSGBox3D" parent="Map"]
+size = Vector3(100, 0.1, 100)
+material = SubResource("ShaderMaterial_rn58k")
+
+[connection signal="pressed" from="GUI/MarginContainer/VBoxContainer/ChangeColorButton" to="." method="_on_change_color_button_pressed"]
+[connection signal="toggled" from="GUI/MarginContainer/VBoxContainer/ReadyButton" to="." method="_on_ready_button_toggled"]

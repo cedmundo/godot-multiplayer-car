@@ -1,0 +1,110 @@
+[gd_scene load_steps=9 format=3 uid="uid://bbc63i5cxusau"]
+
+[ext_resource type="Script" path="res://player/player.gd" id="1_fnm10"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_t6r4o"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_m27t3"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_mk5ie"]
+size = Vector3(2, 1.5, 2.5)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_rjq3i"]
+albedo_color = Color(0.226707, 0.226707, 0.226707, 1)
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_mbfi2"]
+material = SubResource("StandardMaterial3D_rjq3i")
+height = 0.4
+
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_l0q2p"]
+properties/0/path = NodePath(".:position")
+properties/0/spawn = true
+properties/0/replication_mode = 1
+properties/1/path = NodePath(".:rotation")
+properties/1/spawn = true
+properties/1/replication_mode = 1
+properties/2/path = NodePath(".:steering")
+properties/2/spawn = true
+properties/2/replication_mode = 1
+
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_o4mni"]
+properties/0/path = NodePath(".:position")
+properties/0/spawn = true
+properties/0/replication_mode = 1
+properties/1/path = NodePath(".:rotation")
+properties/1/spawn = true
+properties/1/replication_mode = 1
+properties/2/path = NodePath(".:player_name")
+properties/2/spawn = true
+properties/2/replication_mode = 2
+properties/3/path = NodePath(".:player_color")
+properties/3/spawn = true
+properties/3/replication_mode = 2
+properties/4/path = NodePath(".:owner_peer_id")
+properties/4/spawn = true
+properties/4/replication_mode = 2
+properties/5/path = NodePath(".:ready_to_play")
+properties/5/spawn = true
+properties/5/replication_mode = 2
+
+[node name="Player" type="Node3D"]
+script = ExtResource("1_fnm10")
+
+[node name="Car" type="VehicleBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.69561, 0)
+
+[node name="Tag" type="Label3D" parent="Car"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5796, 0)
+pixel_size = 0.01
+billboard = 1
+text = "[PLAYER]"
+
+[node name="Avatar" type="MeshInstance3D" parent="Car"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
+mesh = SubResource("BoxMesh_t6r4o")
+skeleton = NodePath("../..")
+surface_material_override/0 = SubResource("StandardMaterial3D_m27t3")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Car"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
+shape = SubResource("BoxShape3D_mk5ie")
+
+[node name="WheelBL" type="VehicleWheel3D" parent="Car"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.8, 0.3, -0.742144)
+use_as_traction = true
+
+[node name="Neumatic" type="MeshInstance3D" parent="Car/WheelBL"]
+transform = Transform3D(-4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 0, 0, 1, 0, 0, 0)
+mesh = SubResource("CylinderMesh_mbfi2")
+
+[node name="WheelFL" type="VehicleWheel3D" parent="Car"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.8, 0.3, 0.762564)
+use_as_steering = true
+
+[node name="Neumatic" type="MeshInstance3D" parent="Car/WheelFL"]
+transform = Transform3D(-4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 0, 0, 1, 0, 0, 0)
+mesh = SubResource("CylinderMesh_mbfi2")
+
+[node name="WheelBR" type="VehicleWheel3D" parent="Car"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.8, 0.3, -0.742144)
+use_as_traction = true
+
+[node name="Neumatic" type="MeshInstance3D" parent="Car/WheelBR"]
+transform = Transform3D(-4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 0, 0, 1, 0, 0, 0)
+mesh = SubResource("CylinderMesh_mbfi2")
+
+[node name="WheelFR" type="VehicleWheel3D" parent="Car"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.8, 0.3, 0.762564)
+use_as_steering = true
+
+[node name="Neumatic" type="MeshInstance3D" parent="Car/WheelFR"]
+transform = Transform3D(-4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 0, 0, 1, 0, 0, 0)
+mesh = SubResource("CylinderMesh_mbfi2")
+
+[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="Car"]
+replication_interval = 0.2
+replication_config = SubResource("SceneReplicationConfig_l0q2p")
+
+[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
+replication_interval = 0.2
+replication_config = SubResource("SceneReplicationConfig_o4mni")
