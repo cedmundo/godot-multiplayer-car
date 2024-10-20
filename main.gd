@@ -88,7 +88,7 @@ func _add_player_node(peer_id: int, player_name: String, player_color: Color) ->
 	player_node.player_color = player_color
 	player_node.owner_peer_id = peer_id
 	player_node.ready_to_play = false
-	_spawn_point -= 5.0
+	_spawn_point -= 10.0
 
 
 @rpc("any_peer", "reliable")
